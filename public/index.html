@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Driver's License Test System</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+    }
+    h1 {
+      color: #333;
+    }
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 20px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+    }
+    form {
+      margin-bottom: 20px;
+    }
+    label {
+      display: block;
+      margin-bottom: 5px;
+    }
+    input, select {
+      width: 100%;
+      padding: 8px;
+      margin-bottom: 10px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+    }
+    button {
+      padding: 10px 15px;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #0056b3;
+    }
+    .result {
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Driver's License Test System</h1>
+
+    <!-- Register Form -->
+    <form id="register-form">
+      <h2>Register</h2>
+      <label for="id">ID:</label>
+      <input type="text" id="id" name="id" required>
+
+      <label for="first_name">First Name:</label>
+      <input type="text" id="first_name" name="first_name" required>
+
+      <label for="last_name">Last Name:</label>
+      <input type="text" id="last_name" name="last_name" required>
+
+      <button type="submit">Register</button>
+    </form>
+
+    <!-- Physical Test Form -->
+    <form id="physical-test-form">
+      <h2>Record Physical Test</h2>
+      <label for="user_id_physical">User ID:</label>
+      <input type="number" id="user_id_physical" name="user_id_physical" required>
+
+      <label for="color_blind_test">Color Blind Test:</label>
+      <select id="color_blind_test" name="color_blind_test">
+        <option value="pass">Pass</option>
+        <option value="fail">Fail</option>
+      </select>
+
+      <label for="long_sight_test">Long Sight Test:</label>
+      <select id="long_sight_test" name="long_sight_test">
+        <option value="pass">Pass</option>
+        <option value="fail">Fail</option>
+      </select>
+
+      <label for="short_sight_test">Short Sight Test:</label>
+      <select id="short_sight_test" name="short_sight_test">
+        <option value="pass">Pass</option>
+        <option value="fail">Fail</option>
+      </select>
+
+      <label for="response_test">Response Test:</label>
+      <select id="response_test" name="response_test">
+        <option value="pass">Pass</option>
+        <option value="fail">Fail</option>
+      </select>
+
+      <button type="submit">Submit Physical Test</button>
+    </form>
+
+    <!-- Theory Test Form -->
+    <form id="theory-test-form">
+      <h2>Record Theory Test</h2>
+      <label for="user_id_theory">User ID:</label>
+      <input type="number" id="user_id_theory" name="user_id_theory" required>
+
+      <label for="signs_score">Traffic Signs Score:</label>
+      <input type="number" id="signs_score" name="signs_score" max="50" required>
+
+      <label for="lines_score">Road Lines Score:</label>
+      <input type="number" id="lines_score" name="lines_score" max="50" required>
+
+      <label for="right_of_way_score">Right of Way Score:</label>
+      <input type="number" id="right_of_way_score" name="right_of_way_score" max="50" required>
+
+      <button type="submit">Submit Theory Test</button>
+    </form>
+
+    <!-- Practical Test Form -->
+    <form id="practical-test-form">
+      <h2>Record Practical Test</h2>
+      <label for="user_id_practical">User ID:</label>
+      <input type="number" id="user_id_practical" name="user_id_practical" required>
+
+      <label for="practical_result">Practical Test Result:</label>
+      <select id="practical_result" name="practical_result">
+        <option value="pass">Pass</option>
+        <option value="fail">Fail</option>
+      </select>
+
+      <button type="submit">Submit Practical Test</button>
+    </form>
+
+    <!-- Status Form -->
+<form id="status-form">
+  <h2>Check User Status</h2>
+  <label for="search_name">First Name or Last Name:</label>
+  <input type="text" id="search_name" name="search_name" required>
+  <input type="submit" value="Check Status">
+</form>
+
+<!-- Status Result -->
+<p id="result"></p>
+
+  </div>
+
+  <script>
+    document.getElementById('register-form').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const formData = new FormData(e.target);
+  const data = Object.fromEntries(formData);
+
+  try {
+    const response = await fetch('/register', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    });
+
+    const result = await response.text();
+    alert('Registration successful!');
+    document.getElementById('result').innerText = result;
+  } catch (error) {
+    alert('Error: ' + error.message);
+  }
+});
+
+
+    document.getElementById('physical-test-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const formData = new FormData(e.target);
+      const data = Object.fromEntries(formData);
+      
+      const response = await fetch('/tests/physical', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      });
+
+      const result = await response.text();
+      document.getElementById('result').innerText = result;
+    });
+
+    document.getElementById('theory-test-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const formData = new FormData(e.target);
+      const data = Object.fromEntries(formData);
+      
+      const response = await fetch('/tests/theory', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      });
+
+      const result = await response.text();
+      document.getElementById('result').innerText = result;
+    });
+
+    document.getElementById('practical-test-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const formData = new FormData(e.target);
+      const data = Object.fromEntries(formData);
+      
+      const response = await fetch('/tests/practical', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      });
+
+      const result = await response.text();
+      document.getElementById('result').innerText = result;
+    });
+
+    document.getElementById('status-form').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  
+  const searchName = document.getElementById('search_name').value.trim();
+  
+  if (!searchName) {
+    document.getElementById('result').innerText = 'Please enter a name to search.';
+    return;
+  }
+
+  try {
+    // Send request to the server with searchName
+    const response = await fetch(`/status?name=${encodeURIComponent(searchName)}`);
+    const data = await response.json();
+
+    if (response.ok) {
+      if (data.length === 0) {
+        document.getElementById('result').innerText = 'No user found with the given name.';
+      } else {
+        const statusMessages = data.map(user => {
+          const testResults = Object.entries(user.tests).map(([type, result]) => `${type}: ${result}`).join(', ');
+          return `${user.user} - Status: ${user.status}, Tests: ${testResults}`;
+        }).join('\n');
+        document.getElementById('result').innerText = statusMessages;
+      }
+    } else {
+      document.getElementById('result').innerText = 'Error fetching user status.';
+    }
+  } catch (error) {
+    document.getElementById('result').innerText = 'Error: ' + error.message;
+  }
+});
+
+
+
+
+  </script>
+</body>
+</html>
